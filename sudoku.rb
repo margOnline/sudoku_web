@@ -1,17 +1,20 @@
 require 'sinatra'
 require 'rack-flash'
+# require 'sinatra/partial'
 require_relative './lib/sudoku'
 require_relative './lib/cell'
 
 enable :sessions
 set :session_secret, "secret key to sign the cookie"
+# set :partial_template_engine, :erb
 use Rack::Flash
 
 helpers do
   def colour_class(solution_to_check, puzzle_value, current_solution_value, solution_value)
+    # raise "dfs"
     must_be_guessed = puzzle_value.to_i == 0
     tried_to_guess = current_solution_value.to_i != 0
-    guessed_incorrectly = current_solution_value != solution_value
+    guessed_incorrectly = current_solution_value.to_i != solution_value.to_i
 
     if solution_to_check && must_be_guessed && tried_to_guess && guessed_incorrectly
       'incorrect'
@@ -35,10 +38,10 @@ def random_sudoku
 end
 
 def puzzle(sudoku)
-  solved_sudoku = sudoku.clone
-  indices = (0..80).to_a.sample(35)
-  indices.each {|index| sudoku[index] = ' '}
-  sudoku
+  unsolved_sudoku = sudoku.clone
+  indices = (0..80).to_a.sample(1)
+  indices.each {|index| unsolved_sudoku[index] = ' '}
+  unsolved_sudoku
 end
 
 def generate_new_puzzle_if_necessary
@@ -69,13 +72,15 @@ end
 post '/' do
   boxes = params["cell"].each_slice(9).to_a
   cells = (0..8).to_a.inject([]) {|memo, i| memo += boxes[i/3*3,3].map{|box| box[i%3*3,3]}.flatten}
-  session[:current_solution] = cells.map{|value| value.to_i}.join
+  session[:current_solution] = cells#.map{|value| value.to_i}.join
   session[:check_solution] = true
   redirect to("/")
 end
 
 get '/solution' do
   @current_solution = session[:solution]
+  @solution = session[:solution]
+  @puzzle = session[:solution]
   erb :index
 end
 
