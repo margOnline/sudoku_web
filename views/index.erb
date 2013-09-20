@@ -6,6 +6,10 @@
 <body>
   <h1>Life is too short for playing Sudoku</h1>
   <div id="sudoku">
+    <form action="/" method="post">
+      <button>Check solution</button>
+    </form>
+
     <% 3.times do |row| %>
     <div class="row">
       <% 3.times do |box| %>
@@ -16,7 +20,8 @@
           <div class="cell">
             <% cell_index = row*27+ box*3 + cell_row*9 + cell %>
             <% cell_value = @current_solution[cell_index] %>
-            <input type="text" autocomplete="off" maxlength="1" value=<%= cell_value %> >
+            <% colour_class = colour_class(@check_solution, @puzzle[cell_index], @current_solution[cell_index], @solution[cell_index]) %>
+            <input class ="<% colour_class %>" type="text" name="cell[]" autocomplete="off" maxlength="1" value=<%= cell_value %> >
           </div>
           <% end %>
         </div>
