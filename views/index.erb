@@ -1,0 +1,29 @@
+<html>
+<head>
+  <title>Sudoku Web Game</title>
+  <link href="/stylesheets/application.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <h1>Life is too short for playing Sudoku</h1>
+  <div id="sudoku">
+    <% 3.times do |row| %>
+    <div class="row">
+      <% 3.times do |box| %>
+      <div class="box">
+        <% 3.times do |cell_row| %>
+        <div class="cell_row">
+          <% 3.times do |cell| %>
+          <div class="cell">
+            <input type="text" autocomplete="off" maxlength="1">
+          </div>
+          <% end %>
+        </div>
+        <% end %>
+      </div>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+
+</body>
+</html>
