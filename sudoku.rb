@@ -11,7 +11,6 @@ use Rack::Flash
 
 helpers do
   def colour_class(solution_to_check, puzzle_value, current_solution_value, solution_value)
-    # raise "dfs"
     must_be_guessed = puzzle_value.to_i == 0
     tried_to_guess = current_solution_value.to_i != 0
     guessed_incorrectly = current_solution_value.to_i != solution_value.to_i
@@ -39,7 +38,7 @@ end
 
 def puzzle(sudoku)
   unsolved_sudoku = sudoku.clone
-  indices = (0..80).to_a.sample(1)
+  indices = (0..80).to_a.sample(35)
   indices.each {|index| unsolved_sudoku[index] = ' '}
   unsolved_sudoku
 end
@@ -92,5 +91,5 @@ get '/reset' do
   session[:solution] = nil
   session[:current_solution] = nil
   session[:last_visit] = nil
-  redirect to ('/')
+  redirect to("/")
 end
