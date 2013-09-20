@@ -1,3 +1,4 @@
+require_relative 'cell'
 class Sudoku
   
   COLUMN_SIZE = 9

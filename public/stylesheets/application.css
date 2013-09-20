@@ -22,5 +22,17 @@ div.box, div.cell {
 }
 
 .value_provided{
-  background-color: #DDD;
+  background-color: #ddd;
+}
+
+button{
+  margin-top:10px;
+}
+
+div.box{
+  outline:2px solid green;
+}
+.flash {
+  margin: 5px;
+  color:red;
 }

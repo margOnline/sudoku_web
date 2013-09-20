@@ -17,10 +17,14 @@ class Cell
   	@value && @value != 0
   end
 
-  def to_s
-  	return '_' unless solved?
-  	@value.to_s
+  def inspect
+     "\#<Cell value:#{value} "
   end
+
+  # def to_s
+  # 	return '_' unless solved?
+  # 	@value.to_s
+  # end
 
   def solve!
   	return if solved?  	

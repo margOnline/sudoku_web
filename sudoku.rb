@@ -1,12 +1,15 @@
 require 'sinatra'
+require 'rack-flash'
 require_relative './lib/sudoku'
 require_relative './lib/cell'
 
 enable :sessions
+set :session_secret, "secret key to sign the cookie"
+use Rack::Flash
 
 helpers do
   def colour_class(solution_to_check, puzzle_value, current_solution_value, solution_value)
-    must_be_guessed = puzzle_value == 0
+    must_be_guessed = puzzle_value.to_i == 0
     tried_to_guess = current_solution_value.to_i != 0
     guessed_incorrectly = current_solution_value != solution_value
 
@@ -15,9 +18,10 @@ helpers do
     elsif !must_be_guessed
       'value_provided'
     end
-  end  
+  end 
 
-  def cell_value
+
+  def cell_value(value)
     value.to_i == 0 ? '' : value
   end
 
@@ -31,6 +35,9 @@ def random_sudoku
 end
 
 def puzzle(sudoku)
+  solved_sudoku = sudoku.clone
+  indices = (0..80).to_a.sample(35)
+  indices.each {|index| sudoku[index] = ' '}
   sudoku
 end
 
@@ -44,7 +51,10 @@ end
 
 def prepare_to_check_solution 
   @check_solution = session[:check_solution]
-  session[:check_solution] = nil
+  if @check_solution
+    flash[:notice] = "incorrect values are highlighted in yellow"
+  end
+    session[:check_solution] = nil
 end
 
 get '/' do
@@ -57,7 +67,8 @@ get '/' do
 end
 
 post '/' do
-  cells = param["cells"]
+  boxes = params["cell"].each_slice(9).to_a
+  cells = (0..8).to_a.inject([]) {|memo, i| memo += boxes[i/3*3,3].map{|box| box[i%3*3,3]}.flatten}
   session[:current_solution] = cells.map{|value| value.to_i}.join
   session[:check_solution] = true
   redirect to("/")
@@ -70,4 +81,11 @@ end
 
 get '/last-visit' do
   "Previous visit to homepage: #{session[:last_visit]}"
+end
+
+get '/reset' do
+  session[:solution] = nil
+  session[:current_solution] = nil
+  session[:last_visit] = nil
+  redirect to ('/')
 end
