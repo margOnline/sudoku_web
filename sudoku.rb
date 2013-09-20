@@ -4,6 +4,10 @@ require 'rack-flash'
 require_relative './lib/sudoku'
 require_relative './lib/cell'
 
+configure :production do  
+  require 'newrelic_rpm'
+end
+
 enable :sessions
 set :session_secret, "secret key to sign the cookie"
 # set :partial_template_engine, :erb
